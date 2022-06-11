@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import ErrorModal from '../UI/ErrorModal';
+// import Wrapper from '../Helpers/Wrapper';
 
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+  /* Put comment to use useState */
+  const nameInputRef = useRef();
+  const ageInputRef = useRef();
+
+  /* Remove comment to use useState */
+  // const [enteredUsername, setEnteredUsername] = useState('');
+  // const [enteredAge, setEnteredAge] = useState('');
   const [error, setError] = useState();
 
   const addUserHandler = (e) => {
     e.preventDefault();
 
-    if (enteredUsername.trim() === 0 || enteredAge.trim().length === 0) {
+    /* Put comment to use useState */
+    const enteredName = nameInputRef.current.value;
+    const enteredUserAge = ageInputRef.current.value;
+
+    /*Use variables given in useState to use this state  */
+    if (enteredName.trim() === 0 || enteredUserAge.trim().length === 0) {
       setError({
         title: 'Invalid Input',
         message: 'Please enter a valid name and age (non-empty values)',
       });
       return;
     }
-    if (enteredAge < 1) {
+    /*Use variables given in useState to use this state  */
+    if (+enteredUserAge < 1) {
       setError({
         title: 'Invalid age',
         message: 'Please enter a valid age (>0)',
@@ -29,25 +41,35 @@ const AddUser = (props) => {
       return;
     }
     // console.log(enteredUsername, enteredAge);
-    props.onAddUser(enteredUsername, enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('');
+    props.onAddUser(enteredName, enteredUserAge);
+
+    /* Only use this for resetting value entered by user */
+    /* Put comment to use useState */
+    nameInputRef.current.value = '';
+    ageInputRef.current.value = '';
+
+    /* Remove comment to use useState */
+    // Since we are using useRef we no longer needed to reset inputs
+    // setEnteredUsername('');
+    // setEnteredAge('');
   };
 
-  const usernameChangeHandler = (e) => {
-    setEnteredUsername(e.target.value);
-  };
+  /* Remove comment to use useState */
+  // const usernameChangeHandler = (e) => {
+  //   setEnteredUsername(e.target.value);
+  // };
 
-  const ageChangeHandler = (e) => {
-    setEnteredAge(e.target.value);
-  };
+  /* Remove comment to use useState */
+  // const ageChangeHandler = (e) => {
+  //   setEnteredAge(e.target.value);
+  // };
 
   const errorHandler = (e) => {
     setError(null);
   };
 
   return (
-    <div>
+    <Fragment>
       {error && (
         <ErrorModal
           title={error.title}
@@ -61,22 +83,30 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            onChange={usernameChangeHandler}
-            value={enteredUsername}
+            /* Remove comment to use useState */
+            // value={enteredUsername}
+            // onChange={usernameChangeHandler}
+
+            /* Put comment to use useState */
+            ref={nameInputRef}
           ></input>
 
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            /* Remove comment to use useState */
+            // value={enteredAge}
+            // onChange={ageChangeHandler}
+
+            /* Put comment to use useState */
+            ref={ageInputRef}
           ></input>
 
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </Fragment>
   );
 };
 
